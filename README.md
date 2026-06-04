@@ -2,6 +2,13 @@
 
 Astro site for [governancecommons.org](https://governancecommons.org), the umbrella home for Governance Commons standards and deployable adoption SKUs.
 
+## Repository Structure
+
+This repository separates website source code from published content:
+
+- `site/` — Astro website code licensed under MIT (`site/LICENSE`).
+- `content/` — governance content and schema assets licensed separately (`content/LICENSE`).
+
 ## Standards Represented
 
 - Agent Dossier: per-agent identity, authority, handoff, telemetry, and audit contract.
