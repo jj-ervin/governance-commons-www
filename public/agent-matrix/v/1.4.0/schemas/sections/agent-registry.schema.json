@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.4.0/schemas/sections/agent-registry.schema.json",
+  "title": "Agent Registry and Discovery",
+  "description": "Runtime catalog for live agent instances, capability advertisement, health, readiness, and warm pools.",
+  "type": "object",
+  "required": ["registry_endpoint", "registration_policy", "discovery", "health_model"],
+  "additionalProperties": false,
+  "properties": {
+    "registry_endpoint": { "type": "string" },
+    "registration_policy": {
+      "type": "object",
+      "required": ["mode", "requires_identity_attestation", "ttl_seconds"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["static", "self-register", "orchestrator-register"]
+        },
+        "requires_identity_attestation": { "type": "boolean" },
+        "ttl_seconds": { "type": "integer", "minimum": 1 },
+        "renewal_before_expiry_seconds": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "discovery": {
+      "type": "object",
+      "required": ["query_fields", "selection_order"],
+      "additionalProperties": false,
+      "properties": {
+        "query_fields": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        },
+        "selection_order": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        },
+        "capability_advertisement": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "required": { "type": "boolean" },
+            "refresh_interval_seconds": { "type": "integer", "minimum": 1 },
+            "signed": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "health_model": {
+      "type": "object",
+      "required": ["states", "readiness_endpoint", "liveness_endpoint"],
+      "additionalProperties": false,
+      "properties": {
+        "states": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": ["ready", "busy", "degraded", "draining", "unavailable"]
+          }
+        },
+        "readiness_endpoint": { "type": "string" },
+        "liveness_endpoint": { "type": "string" },
+        "required_health_fields": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "warm_standby_pools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["agent_profile", "min_ready_instances", "scale_signal"],
+        "additionalProperties": false,
+        "properties": {
+          "agent_profile": { "type": "string" },
+          "min_ready_instances": { "type": "integer", "minimum": 0 },
+          "max_instances": { "type": "integer", "minimum": 1 },
+          "scale_signal": { "type": "string" }
+        }
+      }
+    }
+  }
+}

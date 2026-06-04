@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.4.0/schemas/sections/cloudevents-binding.schema.json",
+  "title": "CloudEvents Binding",
+  "description": "Maps matrix lifecycle signals to CloudEvents-compatible envelopes.",
+  "type": "object",
+  "required": ["specversion", "event_source", "content_type", "event_type_mappings", "delivery"],
+  "additionalProperties": false,
+  "properties": {
+    "specversion": { "type": "string" },
+    "event_source": { "type": "string" },
+    "content_type": { "type": "string" },
+    "subject_template": { "type": "string" },
+    "id_strategy": {
+      "type": "string",
+      "enum": ["uuid-v7", "uuid-v4", "trace-event-id", "deterministic-hash"]
+    },
+    "time_source": {
+      "type": "string",
+      "enum": ["event-created-at", "emission-time"]
+    },
+    "event_type_mappings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["matrix_signal", "cloudevents_type", "data_schema"],
+        "additionalProperties": false,
+        "properties": {
+          "matrix_signal": { "type": "string" },
+          "cloudevents_type": { "type": "string" },
+          "data_schema": { "type": "string" },
+          "required_extensions": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "extensions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["string", "integer", "number", "boolean"]
+          },
+          "required": { "type": "boolean" }
+        }
+      }
+    },
+    "delivery": {
+      "type": "object",
+      "required": ["mode", "targets", "retry_policy"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["http-binary", "http-structured", "kafka", "pubsub", "eventbridge"]
+        },
+        "targets": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["name", "uri"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string" },
+              "uri": { "type": "string" },
+              "enabled": { "type": "boolean" }
+            }
+          }
+        },
+        "retry_policy": {
+          "type": "object",
+          "required": ["max_attempts", "backoff"],
+          "additionalProperties": false,
+          "properties": {
+            "max_attempts": { "type": "integer", "minimum": 0 },
+            "backoff": {
+              "type": "string",
+              "enum": ["none", "linear", "exponential"]
+            },
+            "dead_letter_target": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governancecommons.org/agent-matrix/v/1.4.0/schemas/sections/a2a-binding.schema.json",
+  "title": "A2A Binding",
+  "description": "Agent-to-Agent protocol binding for cross-vendor discovery, negotiation, task transfer, and status exchange.",
+  "type": "object",
+  "required": ["protocol_version", "enabled", "agent_card", "discovery", "task_exchange", "security"],
+  "additionalProperties": false,
+  "properties": {
+    "protocol_version": { "type": "string" },
+    "enabled": { "type": "boolean" },
+    "specification_reference": { "type": "string" },
+    "agent_card": {
+      "type": "object",
+      "required": ["published", "required_fields", "capability_mapping"],
+      "additionalProperties": false,
+      "properties": {
+        "published": { "type": "boolean" },
+        "endpoint": { "type": "string" },
+        "required_fields": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        },
+        "capability_mapping": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["matrix_capability", "a2a_skill"],
+            "additionalProperties": false,
+            "properties": {
+              "matrix_capability": { "type": "string" },
+              "a2a_skill": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "discovery": {
+      "type": "object",
+      "required": ["methods", "verification_required"],
+      "additionalProperties": false,
+      "properties": {
+        "methods": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": ["well-known-agent-card", "registry", "direct-url"]
+          }
+        },
+        "verification_required": { "type": "boolean" },
+        "cache_ttl_seconds": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "task_exchange": {
+      "type": "object",
+      "required": ["supported_interaction_modes", "handoff_mapping", "status_mapping"],
+      "additionalProperties": false,
+      "properties": {
+        "supported_interaction_modes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": ["request-response", "streaming", "push-notification"]
+          }
+        },
+        "handoff_mapping": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "status_mapping": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "security": {
+      "type": "object",
+      "required": ["identity_source", "auth_required", "min_trust_level"],
+      "additionalProperties": false,
+      "properties": {
+        "identity_source": { "type": "string" },
+        "auth_required": { "type": "boolean" },
+        "min_trust_level": {
+          "type": "string",
+          "enum": ["T0", "T1", "T2", "T3", "T4"]
+        },
+        "signature_required": { "type": "boolean" }
+      }
+    }
+  }
+}
