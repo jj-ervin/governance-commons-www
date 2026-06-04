@@ -1,0 +1,36 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "24"
+
+[[redirects]]
+  from = "https://www.governancecommons.org/*"
+  to = "https://governancecommons.org/:splat"
+  status = 301
+  force = true
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*/v/*/schemas/*.json"
+  [headers.values]
+    Content-Type = "application/schema+json"
+    Cache-Control = "public, max-age=31536000, immutable"
+    Access-Control-Allow-Origin = "*"
+
+[[redirects]]
+  from = "https://agent-dossier.org/*"
+  to = "https://governancecommons.org/agent-dossier/:splat"
+  status = 301
+  force = true
