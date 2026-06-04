@@ -7,7 +7,7 @@ Astro site for [governancecommons.org](https://governancecommons.org), the umbre
 This repository separates website source code from published content:
 
 - `site/` — Astro website code licensed under MIT (`site/LICENSE`).
-- `content/` — governance content and schema assets licensed separately (`content/LICENSE`).
+- `content/` — governance content and schema assets licensed under CC BY 4.0 (`content/LICENSE`).
 
 ## Standards Represented
 
